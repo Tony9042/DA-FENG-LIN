@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>後台管理｜大豐臨</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#2b7a4b;--line:#e6efe8;--paper:#fff;--soft:#f3f7f4;--shadow:0 10px 24px #00000012}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Noto Sans TC',sans-serif;background:#eef4ef;color:#20342e}
+header{background:var(--brand);color:#fff;padding:16px 20px;position:sticky;top:0;z-index:10}
+main{max-width:1140px;margin:22px auto;padding:0 16px 60px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:18px}
+.panel>h2{margin:0;padding:12px 16px;border-bottom:1px solid var(--line);font-size:18px}
+.body{padding:16px}
+.row{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.row-2{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.row-3{display:grid;gap:16px;grid-template-columns:1fr 1fr 1fr}
+.row-1{display:grid;gap:12px;grid-template-columns:1fr}
+@media(max-width:980px){.row,.row-2,.row-3{grid-template-columns:1fr}}
+label{font-weight:800}
+input[type="text"],input[type="url"],textarea{width:100%;padding:10px;border:2px solid #cfe7d6;border-radius:8px;font:inherit}
+textarea{min-height:88px}
+.thumb{width:100%;height:180px;border-radius:10px;object-fit:cover;background:#f3f7f3;border:1px solid #e7efe9}
+input[type="file"]{display:block;margin-top:6px}
+.card{border:1px dashed #cfe5d6;border-radius:10px;padding:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--brand);color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;font-weight:800}
+.btn.ghost{background:#fff;color:var(--brand);border:2px solid var(--brand)}
+.btn.danger{background:#c14646}
+.hint{font-size:12px;color:#6b7b6b;margin-top:6px}
+</style>
+</head>
+<body>
+<header><b>後台管理｜大豐臨</b></header>
+<main>
+
+<!-- 站台基本 -->
+<section class="panel">
+  <h2>站台基本</h2>
+  <div class="body row">
+    <div class="card">
+      <label>網站 Logo</label>
+      <img id="logoPrev" class="thumb" alt="">
+      <input id="logoFile" type="file" accept="image/*">
+      <div class="hint">選擇圖片後會以 Base64 存到瀏覽器（localStorage）。</div>
+    </div>
+    <div class="card">
+      <label>品牌故事首圖</label>
+      <img id="storyPrev" class="thumb" alt="">
+      <input id="storyFile" type="file" accept="image/*">
+      <label style="margin-top:10px">ESG 圖片</label>
+      <img id="esgPrev" class="thumb" alt="">
+      <input id="esgFile" type="file" accept="image/*">
+    </div>
+  </div>
+</section>
+
+<!-- 主頁輪播（HERO） -->
+<section class="panel">
+  <h2>主頁輪播（HERO）</h2>
+  <div class="body row">
+    <div class="card">
+      <label>主標題</label>
+      <input id="heroTitle" type="text" placeholder="種下一個約定 讓豐收降臨">
+      <label>副標題</label>
+      <textarea id="heroSub" placeholder="轉廢為能，點土成金…"></textarea>
+      <div class="row">
+        <div>
+          <label>CTA1 文案</label>
+          <input id="cta1Text" type="text" placeholder="了解我們的故事">
+        </div>
+        <div>
+          <label>CTA1 連結</label>
+          <input id="cta1Href" type="text" placeholder="#story">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>CTA2 文案</label>
+          <input id="cta2Text" type="text" placeholder="探索產品服務">
+        </div>
+        <div>
+          <label>CTA2 連結</label>
+          <input id="cta2Href" type="text" placeholder="#offerings">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">輪播圖片（可上傳或填網址）</h3>
+        <button id="addSlide" class="btn" type="button">＋ 新增一張</button>
+      </div>
+      <div id="slidesWrap" class="row-1" style="margin-top:10px"></div>
+      <div class="hint">儲存後前台會讀取 <code>site.hero</code>；上傳圖片會以 Base64 存入 localStorage（總容量約 5MB）。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 消息中心（可編輯，無圖片） -->
+<section class="panel">
+  <h2>消息中心</h2>
+  <div class="body">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">新聞列表</h3>
+      <button id="addNews" class="btn" type="button">＋ 新增一則</button>
+    </div>
+    <div id="newsList" class="row-1" style="margin-top:10px"></div>
+    <div class="hint">
+      ・每則包含「標籤（綠色小徽章）／日期／標題／摘要／連結」。<br>
+      ・可上下移動調整順序；按「刪除」可移除該則。<br>
+      ・儲存後前台以三欄卡片呈現（不顯示圖片）。
+    </div>
+  </div>
+</section>
+
+<!-- 品牌故事 -->
+<section class="panel">
+  <h2>品牌故事</h2>
+  <div class="body row">
+    <div>
+      <label>導語</label><textarea id="storyStrap"></textarea>
+      <label>段落一</label><textarea id="storyP1"></textarea>
+      <label>段落二</label><textarea id="storyP2"></textarea>
+    </div>
+    <div>
+      <label>三項價值（每行一項）</label><textarea id="storyValues" placeholder="循環經濟&#10;土壤健康&#10;社會關懷"></textarea>
+      <label>三大核心（每行一項）</label><textarea id="storyCore" placeholder="環境責任...&#10;品質保證...&#10;社會關懷..."></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- 產品與服務（兩張卡） -->
+<section class="panel">
+  <h2>產品與服務（兩張卡）</h2>
+  <div class="body row-2">
+    <div class="card">
+      <h3>產品卡 A</h3>
+      <img id="AimgPrev" class="thumb" alt="">
+      <input id="AimgFile" type="file" accept="image/*">
+      <label>徽章</label><input id="Abadge" type="text" placeholder="例如：核心產品">
+      <label>標題</label><input id="Atitle" type="text">
+      <label>副標</label><input id="Asub" type="text">
+      <label>重點（每行一條）</label><textarea id="Abullets"></textarea>
+      <label>圖片網址（可選）</label><input id="AimgUrl" type="url" placeholder="填了會覆蓋上傳圖">
+    </div>
+    <div class="card">
+      <h3>產品卡 B</h3>
+      <img id="BimgPrev" class="thumb" alt="">
+      <input id="BimgFile" type="file" accept="image/*">
+      <label>徽章</label><input id="Bbadge" type="text" placeholder="例如：專業服務">
+      <label>標題</label><input id="Btitle" type="text">
+      <label>副標</label><input id="Bsub" type="text">
+      <label>重點（每行一條）</label><textarea id="Bbullets"></textarea>
+      <label>圖片網址（可選）</label><input id="BimgUrl" type="url">
+    </div>
+  </div>
+</section>
+
+<!-- ESG 文字 -->
+<section class="panel">
+  <h2>ESG 文字</h2>
+  <div class="body row">
+    <div><label>Environment</label><textarea id="e1"></textarea></div>
+    <div><label>Social</label><textarea id="e2"></textarea></div>
+  </div>
+  <div class="body row-1">
+    <div><label>Governance</label><textarea id="e3"></textarea></div>
+  </div>
+</section>
+
+<!-- 聯絡資訊 -->
+<section class="panel">
+  <h2>聯絡資訊</h2>
+  <div class="body row-3">
+    <div><label>電話</label><input id="phone" type="text" placeholder="+886-7-657-7151"></div>
+    <div><label>Email</label><input id="mail" type="text" placeholder="info@dafengling.com"></div>
+    <div><label>地址</label><input id="addr" type="text" placeholder="台灣台北市…"></div>
+  </div>
+</section>
+
+<!-- 區塊背景（淡化） -->
+<section class="panel">
+  <h2>區塊背景（淡化）</h2>
+  <div class="body row-3">
+    <div class="card">
+      <h3>品牌故事</h3>
+      <img id="bgStoryPrev" class="thumb" alt="">
+      <input id="bgStoryFile" type="file" accept="image/*">
+      <label>圖片網址（可選，會覆蓋上傳圖）</label>
+      <input id="bgStoryUrl" type="url" placeholder="https://...">
+      <label>透明度（0~1）</label>
+      <input id="opStory" type="text" placeholder="0.15">
+      <div class="hint">key：bg.story.url / bg.story.opacity</div>
+    </div>
+    <div class="card">
+      <h3>產品與服務</h3>
+      <img id="bgOfferPrev" class="thumb" alt="">
+      <input id="bgOfferFile" type="file" accept="image/*">
+      <label>圖片網址（可選，會覆蓋上傳圖）</label>
+      <input id="bgOfferUrl" type="url" placeholder="https://...">
+      <label>透明度（0~1）</label>
+      <input id="opOffer" type="text" placeholder="0.12">
+      <div class="hint">key：bg.offerings.url / bg.offerings.opacity</div>
+    </div>
+    <div class="card">
+      <h3>消息中心</h3>
+      <img id="bgNewsPrev" class="thumb" alt="">
+      <input id="bgNewsFile" type="file" accept="image/*">
+      <label>圖片網址（可選，會覆蓋上傳圖）</label>
+      <input id="bgNewsUrl" type="url" placeholder="https://...">
+      <label>透明度（0~1）</label>
+      <input id="opNews" type="text" placeholder="0.12">
+      <div class="hint">key：bg.news.url / bg.news.opacity</div>
+    </div>
+  </div>
+
+  <div class="body row-3">
+    <div class="card">
+      <h3>社群永續</h3>
+      <img id="bgEsgPrev" class="thumb" alt="">
+      <input id="bgEsgFile" type="file" accept="image/*">
+      <label>圖片網址（可選，會覆蓋上傳圖）</label>
+      <input id="bgEsgUrl" type="url" placeholder="https://...">
+      <label>透明度（0~1）</label>
+      <input id="opEsg" type="text" placeholder="0.12">
+      <div class="hint">key：bg.esg.url / bg.esg.opacity</div>
+    </div>
+    <div class="card">
+      <h3>聯絡我們</h3>
+      <img id="bgContactPrev" class="thumb" alt="">
+      <input id="bgContactFile" type="file" accept="image/*">
+      <label>圖片網址（可選，會覆蓋上傳圖）</label>
+      <input id="bgContactUrl" type="url" placeholder="https://...">
+      <label>透明度（0~1）</label>
+      <input id="opContact" type="text" placeholder="0.25">
+      <div class="hint">key：bg.contact.url / bg.contact.opacity</div>
+    </div>
+  </div>
+</section>
+
+<!-- 儲存 -->
+<section class="panel">
+  <h2>儲存</h2>
+  <div class="body">
+    <button id="save" class="btn">💾 儲存到瀏覽器</button>
+    <button id="export" class="btn ghost">⬇ 匯出 JSON</button>
+    <label class="btn ghost" style="cursor:pointer">⬆ 匯入 JSON<input id="import" type="file" accept="application/json" style="display:none"></label>
+    <button id="clear" class="btn danger">🗑 清除所有自訂</button>
+    <div class="hint">提示：資料存於此裝置的 localStorage。請確保「前台與後台使用同一個來源（origin）」。</div>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* ===== 儲存健康檢查（建議保留） ===== */
+(function storageHealthCheck(){
+  function lsOK(){ try{ const k='__ls_test__'+Date.now(); localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; } }
+  function usedMB(){ try{ const bytes = Object.values(localStorage).reduce((n,s)=> n + (s ? s.length : 0), 0); return (bytes/1024/1024).toFixed(2);}catch{ return 'N/A'; } }
+  const banner = document.createElement('div');
+  banner.style.cssText = 'background:#eefaf2;border:1px solid #c8efd8;color:#0f5132;padding:10px 12px;border-radius:10px;margin:12px 16px';
+  banner.innerHTML = `<b>✅ localStorage 可用</b>　目前估計使用量：約 ${usedMB()} MB`;
+  if (location.protocol === 'file:' || !lsOK()){
+    banner.style.background='#fff7e6'; banner.style.borderColor='#ffd9a8'; banner.style.color='#5b3b00';
+    banner.innerHTML = `<b>⚠ 建議以 http/https 伺服器開啟</b><br>file:// 模式下，前後台可能不同來源，資料不共享。`;
+  }
+  document.body.prepend(banner);
+})();
+</script>
+
+<script>
+/* ===== 基本工具與預設 ===== */
+const defaults = {
+  logo:"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=200&auto=format&fit=crop",
+  storyImg:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop",
+  esgImg:"https://images.unsplash.com/photo-1558985040-ed4d5029db49?q=80&w=1600&auto=format&fit=crop",
+
+  hero:{
+    title:"種下一個約定 讓豐收降臨",
+    sub:"轉廢為能，點土成金。與土地共創永續循環的美好未來。",
+    cta1:{text:"了解我們的故事",href:"#story"},
+    cta2:{text:"探索產品服務",href:"#offerings"},
+    slides:[
+      "https://images.pexels.com/photos/707915/pexels-photo-707915.jpeg",
+      "https://images.pexels.com/photos/1438994/pexels-photo-1438994.jpeg",
+      "https://images.pexels.com/photos/721991/pexels-photo-721991.jpeg"
+    ]
+  },
+
+  story:{
+    strap:"在繁華的都市角落與廣袤的田野之間，我們記得與土地最初的約定",
+    p1:"我們的故事，始於創辦人對土地深切的疼惜與承諾……",
+    p2:"減碳與豐收不必二選一。透過循環農業與科學堆肥，讓土壤更健康、社會更永續。",
+    values:["廢棄物變成有價值資源","科技與自然的完美結合","創造在地共好與就業"],
+    core:["將碳穩定封存於土壤中，邁向碳中和","提供作物穩定、長效的營養來源","與社區、農友合作，建立共享生態圈"]
+  },
+
+  offerings:{ cards:[
+    {badge:"核心產品",title:"碳穩穩有機質肥料",sub:"為您的餐桌穩住健康",img:"",bullets:["改善土壤健康，提供長效營養","適用於農田與家庭園藝","固碳減排，打造會呼吸的農田"]},
+    {badge:"專業服務",title:"有機廢棄物回收服務",sub:"舉手之勞，永續之鑰",img:"",bullets:["社區合作，建立共好生態圈","完整回收處理流程","促進循環經濟，資源永續利用"]}
+  ]},
+
+  esgText:[
+    "我們致力於將有機廢棄物轉化為資源，減少掩埋與焚燒，透過碳穩穩封存於土壤。",
+    "與社區、農場合作，建回收網絡與教育推廣。",
+    "透明治理、誠信經營，建立長期信任。"
+  ],
+
+  contact:{phone:"+886-7-657-7151",mail:"info@dafengling.com",addr:"台灣台北市信義區永續大道123號"},
+
+  bg:{
+    story:{url:"https://images.unsplash.com/photo-1615716200048-1b1d0e012297?q=80&w=1600&auto=format&fit=crop", opacity:.15},
+    offerings:{url:"https://images.unsplash.com/photo-1523861751938-30554961e309?q=80&w=1600&auto=format&fit=crop", opacity:.12},
+    news:{url:"https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop", opacity:.12},
+    esg:{url:"https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1600&auto=format&fit=crop", opacity:.12},
+    contact:{url:"https://images.unsplash.com/photo-1543339308-43f61b6d13a2?q=80&w=1600&auto=format&fit=crop", opacity:.25}
+  },
+
+  /* 消息中心預設（無圖片） */
+  news:[
+    {badge:"公司新聞", date:"2024年3月15日", title:"大豐臨與在地農場簽署合作備忘錄", excerpt:"攜手推動有機農業發展，建立友善循環生態系統。", link:"#"},
+    {badge:"成果分享", date:"2024年3月10日", title:"碳穩穩肥料助力農友增產30%", excerpt:"經過一季的使用，合作農友反映作物品質穩定提升。", link:"#"},
+    {badge:"活動資訊", date:"2024年3月20日", title:"永續農業實訪節目將播出", excerpt:"邀請產學界專家共同探討資源循環的未來發展。", link:"#"}
+  ]
+};
+
+const $=s=>document.querySelector(s);
+const read64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});
+function load(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):structuredClone(fallback);}catch{return structuredClone(fallback)}}
+function safeSetItem(k, v) { try { localStorage.setItem(k, v); return true; } catch(e){ console.error('localStorage error on', k, e); return false; } }
+
+/* Slides 行項目 */
+function createSlideRow(data={}){ 
+  const wrap=document.createElement('div'); 
+  wrap.className='card';
+  wrap.style.display='grid'; wrap.style.gridTemplateColumns='140px 1fr'; wrap.style.gap='12px'; wrap.style.alignItems='center';
+  wrap.innerHTML=`
+    <div>
+      <div class="row" style="grid-template-columns:1fr 200px;gap:8px">
+        <input type="url" class="slide-url" placeholder="圖片網址（若留空就用下方上傳檔）">
+        <input type="file" class="slide-file" accept="image/*">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button type="button" class="btn ghost btn-up">↑ 上移</button>
+        <button type="button" class="btn ghost btn-down">↓ 下移</button>
+        <button type="button" class="btn danger btn-del">刪除</button>
+      </div>
+    </div>`;
+  const urlInput=wrap.querySelector('.slide-url'); const fileInput=wrap.querySelector('.slide-file');
+  if(data && data.src){ urlInput.value=data.src; }
+  wrap.querySelector('.btn-up').onclick = ()=>{ const p=$('#slidesWrap'); if(wrap.previousElementSibling) p.insertBefore(wrap, wrap.previousElementSibling); };
+  wrap.querySelector('.btn-down').onclick = ()=>{ const p=$('#slidesWrap'); if(wrap.nextElementSibling) p.insertBefore(wrap.nextElementSibling, wrap); };
+  wrap.querySelector('.btn-del').onclick = ()=> wrap.remove();
+  return wrap;
+}
+
+/* 消息中心行項目（無圖片） */
+function createNewsRow(data = {}) {
+  const wrap = document.createElement('div');
+  wrap.className = 'card';
+  wrap.innerHTML = `
+    <div class="row" style="grid-template-columns:180px 1fr;gap:8px">
+      <div>
+        <label>標籤</label>
+        <input type="text" class="news-badge" placeholder="例如：公告更新">
+      </div>
+      <div>
+        <label>日期</label>
+        <input type="text" class="news-date" placeholder="2024年3月15日 / 或 YYYY-MM-DD">
+      </div>
+    </div>
+    <div style="margin-top:8px">
+      <label>標題</label>
+      <input type="text" class="news-title" placeholder="新聞標題">
+    </div>
+    <div style="margin-top:8px">
+      <label>摘要</label>
+      <textarea class="news-excerpt" placeholder="一句～兩句簡介，會顯示在卡片內"></textarea>
+    </div>
+    <div style="margin-top:8px">
+      <label>連結</label>
+      <input type="url" class="news-link" placeholder="https://... 或 #">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button type="button" class="btn ghost btn-up">↑ 上移</button>
+      <button type="button" class="btn ghost btn-down">↓ 下移</button>
+      <button type="button" class="btn danger btn-del">刪除</button>
+    </div>
+  `;
+
+  wrap.querySelector('.news-badge').value  = data.badge  || '';
+  wrap.querySelector('.news-date').value   = data.date   || '';
+  wrap.querySelector('.news-title').value  = data.title  || '';
+  wrap.querySelector('.news-excerpt').value= data.excerpt|| '';
+  wrap.querySelector('.news-link').value   = data.link   || '';
+
+  wrap.querySelector('.btn-up').onclick   = ()=>{ const p=$('#newsList'); if(wrap.previousElementSibling) p.insertBefore(wrap, wrap.previousElementSibling); };
+  wrap.querySelector('.btn-down').onclick = ()=>{ const p=$('#newsList'); if(wrap.nextElementSibling) p.insertBefore(wrap.nextElementSibling, wrap); };
+  wrap.querySelector('.btn-del').onclick  = ()=> wrap.remove();
+  return wrap;
+}
+
+/* 載入畫面 */
+function fill(){
+  // 基本圖
+  $('#logoPrev').src = localStorage.getItem('site.logo') || defaults.logo;
+  $('#storyPrev').src = localStorage.getItem('site.storyImg') || defaults.storyImg;
+  $('#esgPrev').src   = localStorage.getItem('site.esgImg')   || defaults.esgImg;
+
+  // 故事
+  const st = load('site.story', defaults.story);
+  $('#storyStrap').value = st.strap; $('#storyP1').value = st.p1; $('#storyP2').value = st.p2;
+  $('#storyValues').value = (st.values||[]).join('\n');
+  $('#storyCore').value   = (st.core||[]).join('\n');
+
+  // 產品卡（兩張）
+  const of = load('site.offerings', defaults.offerings);
+  const [A,B] = of.cards;
+  const setCard = (p,card)=>{ 
+    $(`#${p}imgPrev`).src = card?.img || ''; 
+    $(`#${p}badge`).value = card?.badge || '';
+    $(`#${p}title`).value = card?.title || '';
+    $(`#${p}sub`).value   = card?.sub   || '';
+    $(`#${p}bullets`).value = (card?.bullets||[]).join('\n');
+    $(`#${p}imgUrl`).value = '';
+  };
+  setCard('A',A); setCard('B',B);
+
+  // 背景
+  const bgDef = defaults.bg;
+  const readBG = (k)=>({
+    url: localStorage.getItem(`bg.${k}.url`) || (bgDef[k]?.url || ''),
+    opacity: (()=>{ const op=parseFloat(localStorage.getItem(`bg.${k}.opacity`)); return isNaN(op) ? (bgDef[k]?.opacity ?? '') : op; })()
+  });
+  const s = readBG('story');     $('#bgStoryPrev').src=s.url||'';     $('#bgStoryUrl').value=s.url||'';     $('#opStory').value=s.opacity;
+  const o = readBG('offerings'); $('#bgOfferPrev').src=o.url||'';     $('#bgOfferUrl').value=o.url||'';     $('#opOffer').value=o.opacity;
+  const n = readBG('news');      $('#bgNewsPrev').src=n.url||'';      $('#bgNewsUrl').value=n.url||'';      $('#opNews').value=n.opacity;
+  const g = readBG('esg');       $('#bgEsgPrev').src=g.url||'';       $('#bgEsgUrl').value=g.url||'';       $('#opEsg').value=g.opacity;
+  const c = readBG('contact');   $('#bgContactPrev').src=c.url||'';   $('#bgContactUrl').value=c.url||'';   $('#opContact').value=c.opacity;
+
+  // HERO
+  const hero = load('site.hero', defaults.hero);
+  $('#heroTitle').value = hero.title || '';
+  $('#heroSub').value = hero.sub || '';
+  $('#cta1Text').value = hero.cta1?.text || '';
+  $('#cta1Href').value = hero.cta1?.href || '';
+  $('#cta2Text').value = hero.cta2?.text || '';
+  $('#cta2Href').value = hero.cta2?.href || '';
+
+  const slidesWrap = $('#slidesWrap'); slidesWrap.innerHTML='';
+  (hero.slides || []).forEach(src => slidesWrap.appendChild(createSlideRow({src})));
+  $('#addSlide').onclick = ()=> slidesWrap.appendChild(createSlideRow({src:''}));
+
+  // 消息中心
+  const newsList = $('#newsList'); newsList.innerHTML='';
+  const newsData = load('site.news', defaults.news);
+  (newsData || []).forEach(n => newsList.appendChild(createNewsRow(n)));
+  $('#addNews').onclick = ()=> newsList.appendChild(createNewsRow({}));
+}
+
+/* 儲存 */
+async function save(){
+  // 基本圖
+  if($('#logoFile').files[0])  localStorage.setItem('site.logo',     await read64($('#logoFile').files[0]));
+  if($('#storyFile').files[0]) localStorage.setItem('site.storyImg', await read64($('#storyFile').files[0]));
+  if($('#esgFile').files[0])   localStorage.setItem('site.esgImg',   await read64($('#esgFile').files[0]));
+
+  // 故事
+  const st = load('site.story', defaults.story);
+  st.strap=$('#storyStrap').value.trim();
+  st.p1=$('#storyP1').value.trim();
+  st.p2=$('#storyP2').value.trim();
+  st.values=$('#storyValues').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3);
+  st.core  =$('#storyCore').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,3);
+  localStorage.setItem('site.story', JSON.stringify(st));
+
+  // 產品卡（兩張）
+  const of = load('site.offerings', defaults.offerings);
+  of.cards = of.cards.slice(0,2);
+  const writeCard = async (p,i)=>{
+    if(!of.cards[i]) of.cards[i] = {};
+    const card = of.cards[i];
+    const f = $(`#${p}imgFile`).files[0];
+    const url = $(`#${p}imgUrl`).value.trim();
+    if(f) card.img = await read64(f); else if(url) card.img = url;
+    card.badge=$(`#${p}badge`).value.trim();
+    card.title=$(`#${p}title`).value.trim();
+    card.sub=$(`#${p}sub`).value.trim();
+    card.bullets=$(`#${p}bullets`).value.split('\n').map(s=>s.trim()).filter(Boolean);
+  };
+  await writeCard('A',0); await writeCard('B',1);
+  localStorage.setItem('site.offerings', JSON.stringify(of));
+
+  // ESG 文字
+  const et = [$('#e1').value.trim(),$('#e2').value.trim(),$('#e3').value.trim()];
+  localStorage.setItem('site.esgText', JSON.stringify(et));
+
+  // 聯絡
+  localStorage.setItem('site.contact', JSON.stringify({
+    phone:$('#phone').value.trim(), mail:$('#mail').value.trim(), addr:$('#addr').value.trim()
+  }));
+
+  // 背景
+  const writeBG = async (k, fileSel, urlSel, opSel, fallbackUrl) => {
+    let url = $(urlSel).value.trim();
+    const f = $(fileSel).files[0];
+    if(f) url = await read64(f);
+    if(!url) url = fallbackUrl || '';
+    const op = $(opSel).value.trim();
+    if(url) localStorage.setItem(`bg.${k}.url`, url); else localStorage.removeItem(`bg.${k}.url`);
+    if(op !== '' && !isNaN(parseFloat(op))) localStorage.setItem(`bg.${k}.opacity`, String(parseFloat(op)));
+    else localStorage.removeItem(`bg.${k}.opacity`);
+  };
+  await writeBG('story',   '#bgStoryFile',   '#bgStoryUrl',   '#opStory',   defaults.bg.story.url);
+  await writeBG('offerings','#bgOfferFile',  '#bgOfferUrl',   '#opOffer',   defaults.bg.offerings.url);
+  await writeBG('news',    '#bgNewsFile',    '#bgNewsUrl',    '#opNews',    defaults.bg.news.url);
+  await writeBG('esg',     '#bgEsgFile',     '#bgEsgUrl',     '#opEsg',     defaults.bg.esg.url);
+  await writeBG('contact', '#bgContactFile', '#bgContactUrl', '#opContact', defaults.bg.contact.url);
+
+  // 消息中心
+  async function collectNews(){
+    const rows = Array.from(document.querySelectorAll('#newsList .card'));
+    const out = [];
+    for (const row of rows){
+      const badge  = row.querySelector('.news-badge').value.trim();
+      const date   = row.querySelector('.news-date').value.trim();
+      const title  = row.querySelector('.news-title').value.trim();
+      const excerpt= row.querySelector('.news-excerpt').value.trim();
+      const link   = row.querySelector('.news-link').value.trim();
+      if (title){ out.push({badge, date, title, excerpt, link}); }
+    }
+    return out;
+  }
+  const newsOut = await collectNews();
+  localStorage.setItem('site.news', JSON.stringify(newsOut));
+
+  // HERO
+  const hero = load('site.hero', defaults.hero);
+  hero.title = $('#heroTitle').value.trim();
+  hero.sub   = $('#heroSub').value.trim();
+  hero.cta1  = { text: $('#cta1Text').value.trim(), href: $('#cta1Href').value.trim() };
+  hero.cta2  = { text: $('#cta2Text').value.trim(), href: $('#cta2Href').value.trim() };
+
+  async function collectSlides(){
+    const rows = Array.from(document.querySelectorAll('#slidesWrap .card'));
+    const out = [];
+    for (const row of rows){
+      const url = row.querySelector('.slide-url').value.trim();
+      const f = row.querySelector('.slide-file').files[0];
+      if (f) out.push(await read64(f));
+      else if (url) out.push(url);
+    }
+    return out;
+  }
+  hero.slides = await collectSlides();
+
+  const ok = safeSetItem('site.hero', JSON.stringify(hero));
+  if(!ok){
+    const used = Object.values(localStorage).reduce((n, s)=> n + (s?.length||0), 0);
+    alert('❗儲存失敗：localStorage 容量可能不足。\n'
+      +'建議：\n1) 優先用「圖片網址」取代上傳（Base64 很大）\n'
+      +'2) 壓縮圖片：寬~1600px、JPG 品質 70\n'
+      +`目前估計使用量：約 ${(used/1024/1024).toFixed(2)} MB`);
+    return;
+  }
+
+  alert('✅ 已儲存！回到前台重新整理即可看到更新。');
+}
+
+/* 匯出 / 匯入 / 清除 */
+function exportAll(){
+  const dump = {
+    'site.logo': localStorage.getItem('site.logo') || defaults.logo,
+    'site.storyImg': localStorage.getItem('site.storyImg') || defaults.storyImg,
+    'site.esgImg': localStorage.getItem('site.esgImg') || defaults.esgImg,
+    'site.story': load('site.story', defaults.story),
+    'site.offerings': load('site.offerings', defaults.offerings),
+    'site.esgText': load('site.esgText', defaults.esgText),
+    'site.contact': load('site.contact', defaults.contact),
+    'site.hero': load('site.hero', defaults.hero),
+    'site.news': load('site.news', defaults.news),
+
+    'bg.story.url': localStorage.getItem('bg.story.url') || (defaults.bg.story.url || ''),
+    'bg.story.opacity': localStorage.getItem('bg.story.opacity') || String(defaults.bg.story.opacity ?? ''),
+    'bg.offerings.url': localStorage.getItem('bg.offerings.url') || (defaults.bg.offerings.url || ''),
+    'bg.offerings.opacity': localStorage.getItem('bg.offerings.opacity') || String(defaults.bg.offerings.opacity ?? ''),
+    'bg.news.url': localStorage.getItem('bg.news.url') || (defaults.bg.news.url || ''),
+    'bg.news.opacity': localStorage.getItem('bg.news.opacity') || String(defaults.bg.news.opacity ?? ''),
+    'bg.esg.url': localStorage.getItem('bg.esg.url') || (defaults.bg.esg.url || ''),
+    'bg.esg.opacity': localStorage.getItem('bg.esg.opacity') || String(defaults.bg.esg.opacity ?? ''),
+    'bg.contact.url': localStorage.getItem('bg.contact.url') || (defaults.bg.contact.url || ''),
+    'bg.contact.opacity': localStorage.getItem('bg.contact.opacity') || String(defaults.bg.contact.opacity ?? ''),
+  };
+  const blob = new Blob([JSON.stringify(dump,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='dafengling-site-data.json'; a.click();
+}
+
+function importAll(file){
+  const r=new FileReader();
+  r.onload=()=>{ try{
+    const data=JSON.parse(r.result);
+    Object.entries(data).forEach(([k,v])=>{
+      if(typeof v==='string' && (k==='site.logo' || k==='site.storyImg' || k==='site.esgImg')) localStorage.setItem(k,v);
+      else localStorage.setItem(k,JSON.stringify(v));
+    });
+    fill(); alert('✅ 匯入完成');
+  }catch(e){ alert('匯入失敗：JSON 格式不正確'); } };
+  r.readAsText(file);
+}
+
+function clearAll(){
+  if(!confirm('確定清除所有自訂？')) return;
+  [
+    'site.logo','site.storyImg','site.esgImg',
+    'site.story','site.offerings','site.esgText','site.contact','site.hero','site.news',
+    'bg.story.url','bg.story.opacity',
+    'bg.offerings.url','bg.offerings.opacity',
+    'bg.news.url','bg.news.opacity',
+    'bg.esg.url','bg.esg.opacity',
+    'bg.contact.url','bg.contact.opacity',
+  ].forEach(k=>localStorage.removeItem(k));
+  fill(); alert('已清除');
+}
+
+/* 事件掛載 */
+document.addEventListener('DOMContentLoaded', ()=>{
+  fill();
+  document.getElementById('save').onclick = save;
+  document.getElementById('export').onclick = exportAll;
+  document.getElementById('import').addEventListener('change',e=>{ if(e.target.files[0]) importAll(e.target.files[0]); e.target.value=''; });
+  document.getElementById('clear').onclick = clearAll;
+});
+</script>
+</body>
+</html>

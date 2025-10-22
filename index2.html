@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大豐臨實業有限公司｜官方網站</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b2b26; --muted:#65726a;
+  --brand:#2b7a4b; --brand-2:#46c08e;
+  --paper:#ffffff; --soft:#f4f8f2; --line:#e6efe8; --shadow:0 10px 30px #00000012;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Noto Sans TC',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;color:var(--ink);background:#eef5ee}
+a{color:var(--brand);text-decoration:none}
+
+/* 產品卡標題＋ICON */
+.card .title-row{display:flex;align-items:center;gap:10px;margin-top:6px}
+.icon-circle{
+  width:28px;height:28px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:#eaf4ec;border:1px solid #d7eadc;color:#2b7a4b;flex:0 0 28px
+}
+.icon-circle svg{width:16px;height:16px;display:block}
+
+/* ===== NEWS（新版三欄卡片，無圖片） ===== */
+#news{
+  background: linear-gradient(180deg,#f3fbf5 0%, #eef7f0 100%);
+}
+#news .news-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+  max-width:1180px;
+  margin:0 auto;
+}
+@media(min-width:860px){ #news .news-grid{ grid-template-columns:repeat(3,1fr); } }
+
+.news-card{
+  display:block;
+  background:#fff;
+  border:1px solid #e6efe8;
+  border-radius:16px;
+  box-shadow:0 10px 24px #00000010;
+  padding:16px 16px 14px;
+  transition:transform .15s ease, box-shadow .15s ease;
+  color:inherit;
+}
+.news-card:hover{ transform:translateY(-2px); box-shadow:0 14px 30px #00000014; }
+.news-badge{
+  display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px;
+  background:#eaf7ee; color:#2b7a4b; border:1px solid #d6eadc; margin-bottom:8px;
+}
+#news time{ display:block; font-size:12px; color:#6b7b6d; margin-bottom:6px; }
+.news-title{ margin:0 0 8px; font-size:16px; font-weight:800; color:#1e2f29; }
+.news-excerpt{ margin:0 0 10px; color:#47564f; line-height:1.7; font-size:14px; }
+.news-more{ color:#2b7a4b; font-weight:700; font-size:14px; }
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:#ffffffdd;backdrop-filter:saturate(120%) blur(8px);
+  border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.brand b{color:var(--brand)}
+nav a{margin-left:18px;font-weight:700;color:var(--brand)}
+nav a:hover{opacity:.8}
+
+/* === HERO（輪播＋主題） === */
+.hero{position:relative;overflow:hidden;width:100%;padding:0;background:#000}
+.slides{display:flex;transition:transform 1s ease}
+.slide{min-width:100%;aspect-ratio:16/9;background-size:cover;background-position:center}
+.hero-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.hero .panel{
+  pointer-events:auto;background:#0008;color:#fff;text-align:center;
+  border-radius:16px;padding:22px;width:min(900px,92vw);margin:0 16px
+}
+.hero h1{margin:4px 0 8px;font-size:clamp(28px,4.6vw,54px)}
+.hero p{margin:0 0 14px;font-size:clamp(15px,2.2vw,18px);opacity:.95}
+.ctas{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{border:2px solid #fff;color:#fff;background:transparent;padding:10px 16px;border-radius:10px;font-weight:800;cursor:pointer}
+.btn.primary{background:#2b7a4b;border-color:#2b7a4b}
+.btn.secondary{background:#fff;color:#2b7a4b;border-color:#fff}
+.btn:hover{filter:brightness(.95);box-shadow:0 10px 24px #0002}
+
+/* section generic */
+section{padding:80px 20px;background:#fff}
+.container{max-width:1180px;margin:auto}
+.title{font-weight:900;letter-spacing:.08em;text-align:center;color:#24413a;font-size:clamp(28px,4.5vw,44px);margin:0 0 6px}
+.strap{color:#8b6f56;text-align:center;margin:0 0 36px}
+
+/* ====== 可淡化背景工具 ====== */
+.bg-photo{ position:relative; isolation:isolate; overflow:hidden; }
+.bg-photo::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background: var(--bg-url, none) center/cover no-repeat;
+  filter: var(--bg-filter, contrast(.95) brightness(1.15));
+  opacity: var(--bg-opacity, .15);
+}
+.bg-photo > .container{ position:relative; z-index:1 }
+
+/* story */
+.story{display:grid;gap:26px;grid-template-columns:1.15fr .85fr; align-items:center}
+@media(max-width:960px){.story{grid-template-columns:1fr}}
+.story h3{margin:0 0 10px;color:#2b7a4b}
+.story p{margin:6px 0;line-height:1.9;color:#36463f}
+.story .pic{border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+.story .pic img{display:block;width:100%;height:auto}
+
+/* trio panel */
+.trio{margin-top:28px;background:#ffffff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px}
+.trio .row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center}
+@media(max-width:900px){.trio .row{grid-template-columns:1fr}}
+.trio .ball{width:80px;height:80px;border-radius:999px;background:var(--brand);color:#fff;font-weight:900;
+display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:28px;line-height:1}
+
+/* products */
+#offerings{background:#f5fbf7}
+.grid2{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{background:#fff;border-radius:16px;border:1px solid var(--line);box-shadow:var(--shadow);padding:16px}
+.card h3{margin:8px 0 6px;color:#175e37}
+.badge{display:inline-block;background:#e8f8ee;border:1px solid #cfead9;color:#238457;border-radius:999px;font-size:12px;padding:4px 10px;margin-bottom:6px}
+.thumb{width:100%;height:240px;border-radius:12px;object-fit:cover;margin:8px 0}
+.bullets{margin:10px 0 0;padding-left:18px}
+.bullets li{margin:6px 0;color:#3b4a43}
+
+/* ESG */
+#esg{background:#f4f8f2}
+.esg-in{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center}
+@media(max-width:1000px){.esg-in{grid-template-columns:1fr}}
+.esg-in h4{margin:10px 0 8px;color:#1c6a3e}
+.esg-in p{margin:6px 0;line-height:1.9;color:#32443b}
+.esg-pic{border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.esg-pic img{width:100%;display:block}
+
+/* ➕ ESG 標題 ICON（新加） */
+.esg-title{display:flex;align-items:center;gap:10px}
+.esg-ico{
+  width:28px;height:28px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:#eaf7ee;border:1px solid #d6eadc;color:#2b7a4b;font-size:16px;flex:0 0 28px
+}
+
+/* contact */
+#contact{background:transparent}
+#contact .veil{background:#1d3f2eeb;border-radius:18px;color:#e9fff3;box-shadow:var(--shadow);padding:26px}
+#contact .title{color:#24413a}
+#contact .strap{color:#8b6f56}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:10px}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}}
+.icon{font-size:30px}
+.center{text-align:center}
+
+/* footer */
+footer{background:#113b28;color:#bde7d1;text-align:center;padding:18px}
+
+/* 品牌故事 Hero 調整 */
+#story.story-hero{ padding-top:90px; padding-bottom:70px; }
+#story.story-hero .title{ font-size:clamp(32px,5vw,52px); letter-spacing:.08em; color:#24413a; text-align:center; margin-bottom:6px; font-weight:900; }
+#story.story-hero .strap{ text-align:center; color:#5d6c63; margin-bottom:28px; }
+
+/* values（2×2 手機1欄） */
+.values{ display:grid; gap:18px; grid-template-columns:1fr; margin-top:22px; }
+@media(min-width:680px){ .values{ grid-template-columns:repeat(2,1fr);} }
+.val{ background:transparent; border:0; box-shadow:none; padding:6px 6px 10px; text-align:center; }
+.val b{ display:block; margin:6px 0 4px; color:#1f6a44; }
+.val .txt{ color:#54655c; }
+.val .dot{ width:58px;height:58px;border-radius:999px;margin:0 auto 8px;background:#2b7a4b;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center; }
+
+/* trio 標題加大 */
+.trio h3{ font-size:clamp(24px,3.4vw,36px); font-weight:900; letter-spacing:.06em; }
+.trio h3.center{ margin:10px 0 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <img id="logo" alt="logo">
+      <b>大豐臨實業有限公司</b>
+    </div>
+    <nav>
+      <a href="#story">品牌故事</a>
+      <a href="#offerings">產品與服務</a>
+      <a href="#news">消息中心</a>
+      <a href="#esg">社群永續</a>
+      <a href="#contact">聯絡我們</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO（輪播＋主題文案） -->
+<section id="home" class="hero">
+  <div id="slides" class="slides"></div>
+  <div class="hero-overlay">
+    <div class="panel">
+      <h1 id="heroTitle">種下一個約定 讓豐收降臨</h1>
+      <p id="heroSub">轉廢為能，點土成金。與土地共創永續循環的美好未來。</p>
+      <div class="ctas">
+        <a id="cta1" class="btn primary" href="#story">了解我們的故事</a>
+        <a id="cta2" class="btn secondary" href="#offerings">探索產品服務</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 品牌故事（淡化背景） -->
+<section id="story" class="bg-photo story-hero">
+  <div class="container">
+    <h2 class="title">品牌故事</h2>
+    <p class="strap" id="storyStrap">在繁華的都市角落與廣袤的田野之間，我們始終記得與土地最初的約定</p>
+
+    <div class="story">
+      <div>
+        <h3>源起：一份對土地的疼惜</h3>
+        <p id="storyP1">我們的故事，始於創辦人對土地深切的疼惜。他看見化學肥料與工業廢棄物正逐漸侵蝕土壤的健康，農人汗水灌溉的</p>
+        <p id="storyP2">減碳與豐收不必二選一。透過循環農業與科學堆肥，讓土壤更健康、社會更永續。</p>
+      </div>
+      <div class="pic"><img id="storyImg" alt=""></div>
+    </div>
+
+    <div class="values">
+      <div class="val">
+        <div class="dot">♻</div><b>循環經濟</b><div id="v1" class="txt">廢棄物變成有價值資源</div>
+      </div>
+      <div class="val">
+        <div class="dot">🌱</div><b>土壤健康</b><div id="v2" class="txt">科技與自然的完美結合</div>
+      </div>
+      <div class="val">
+        <div class="dot">🤝</div><b>社會關懷</b><div id="v3" class="txt">創造在地共好與就業</div>
+      </div>
+      <div class="val">
+        <div class="dot">🌍</div><b>環境保護</b><div class="txt">減少碳排放</div>
+      </div>
+    </div>
+
+    <div class="trio">
+      <h3 class="center" style="margin:6px 0 12px;color:#2b7a4b">核心：從「碳穩穩」到「大豐臨」</h3>
+      <div class="row">
+        <div><div class="ball">碳</div><b>環境責任</b><p id="c1">將碳穩定封存於土壤中，邁向碳中和</p></div>
+        <div><div class="ball">穩</div><b>品質保證</b><p id="c2">提供作物穩定、長效的營養來源</p></div>
+        <div><div class="ball">穩</div><b>社會關懷</b><p id="c3">與社區、農友合作，建立共享生態圈</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 產品與服務（淡化背景） -->
+<section id="offerings" class="bg-photo">
+  <div class="container">
+    <h2 class="title">產品與服務</h2>
+    <p class="strap">從廚房的果皮，到田裡的沃土；從破土的新芽，到餐桌的佳餚</p>
+    <div id="cards" class="grid2"></div>
+  </div>
+</section>
+
+<!-- 消息中心（淡化背景） -->
+<section id="news" class="bg-photo">
+  <div class="container">
+    <h2 class="title">消息中心</h2>
+    <p class="strap">最新公告、活動資訊與媒體報導</p>
+    <div id="newsWrap" class="news-grid"></div>
+  </div>
+</section>
+
+<!-- 社群永續（淡化背景）-->
+<section id="esg" class="bg-photo">
+  <div class="container">
+    <h2 class="title">社群永續</h2>
+    <p class="strap">看得見的循環經濟：從垃圾變生機，從堆肥到新芽</p>
+
+    <div class="esg-in">
+      <div>
+        <h4 class="esg-title"><span class="esg-ico">🌿</span>環境（Environment）</h4>
+        <p id="e1">我們致力於將有機廢棄物轉化為有價值的資源，減少掩埋與焚燒，透過「碳穩穩」肥料將碳封存在土壤中。</p>
+
+        <h4 class="esg-title"><span class="esg-ico">🤝</span>社會（Social）</h4>
+        <p id="e2">與在地社區、農場合作，建立回收網絡，推廣環境教育，提升大眾對資源意識。</p>
+
+        <h4 class="esg-title"><span class="esg-ico">⚖️</span>治理（Governance）</h4>
+        <p id="e3">以透明負責的營運模式，落實誠信與永續決策，建立長期信任。</p>
+      </div>
+
+      <!-- 右側圖片：可在後台「ESG 圖片」上傳或貼網址 -->
+      <div class="esg-pic"><img id="esgImg" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<!-- 聯絡我們（淡化背景；保留深色幕簾） -->
+<section id="contact" class="bg-photo">
+  <div class="container">
+    <h2 class="title">聯絡我們</h2>
+    <p class="strap">有問題或合作提案嗎？歡迎隨時與我們聯繫！</p>
+
+    <div class="veil">
+      <div class="contact-grid">
+        <div class="center">
+          <div class="icon">📞</div>
+          <h3>電話</h3>
+          <div id="tel">+886-7-657-7151</div>
+        </div>
+        <div class="center">
+          <div class="icon">✉️</div>
+          <h3>電子郵件</h3>
+          <div id="mail">info@dafengling.com</div>
+        </div>
+        <div class="center">
+          <div class="icon">📍</div>
+          <h3>地址</h3>
+          <div id="addr">台灣台北市信義區永續大道123號</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="year"></span> 大豐臨實業有限公司．All rights reserved.</footer>
+
+<script>
+/* ===== 預設資料（含 HERO） ===== */
+const defaults = {
+  logo:"https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=200&auto=format&fit=crop",
+  hero:{
+    title:"種下一個約定 讓豐收降臨",
+    sub:"轉廢為能，點土成金。與土地共創永續循環的美好未來。",
+    cta1:{text:"了解我們的故事",href:"#story"},
+    cta2:{text:"探索產品服務",href:"#offerings"},
+    slides:[
+      "https://images.pexels.com/photos/707915/pexels-photo-707915.jpeg",
+      "https://images.pexels.com/photos/1438994/pexels-photo-1438994.jpeg",
+      "https://images.pexels.com/photos/721991/pexels-photo-721991.jpeg"
+    ]
+  },
+  storyImg:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1600&auto=format&fit=crop",
+  esgImg:"https://images.unsplash.com/photo-1558985040-ed4d5029db49?q=80&w=1600&auto=format&fit=crop",
+  story:{
+    strap:"在繁華的都市角落與廣袤的田野之間，我們記得與土地最初的約定",
+    p1:"我們的故事，始於創辦人對土地深切的疼惜與承諾……",
+    p2:"減碳與豐收不必二選一。透過循環農業與科學堆肥，讓土壤更健康、社會更永續。",
+    values:["廢棄物變成有價值資源","科技與自然的完美結合","創造在地共好與就業"],
+    core:["將碳穩定封存於土壤中，邁向碳中和","提供作物穩定、長效的營養來源","與社區、農友合作，建立共享生態圈"]
+  },
+  offerings:{
+    cards:[
+      {badge:"核心產品",title:"碳穩穩有機質肥料",sub:"為您的餐桌穩住健康",
+       img:"https://images.unsplash.com/photo-1581888227599-779811939961?q=80&w=1600&auto=format&fit=crop",
+       bullets:["改善土壤健康，提供長效營養","適用於農田與家庭園藝","固碳減排，打造會呼吸的農田"]},
+      {badge:"專業服務",title:"有機廢棄物回收服務",sub:"舉手之勞，永續之鑰",
+       img:"https://images.unsplash.com/photo-1520591799317-1c76e2ed1e86?q=80&w=1600&auto=format&fit=crop",
+       bullets:["社區合作，建立共好生態圈","完整回收處理流程","促進循環經濟，資源永續利用"]},
+      {badge:"亮點案例",title:"讓廢棄物回到土地",sub:"打造碳匯農地，實現碳中和",
+       img:"https://images.unsplash.com/photo-1524592714635-d77511a4834a?q=80&w=1600&auto=format&fit=crop",
+       bullets:["自然碳匯・碳中和","友善土壤・健康作物","循環經濟・永續家園"]}
+    ]
+  },
+  esgText:["…","…","…"],
+  contact:{phone:"+886-7-657-7151",mail:"info@dafengling.com",addr:"台灣台北市信義區永續大道123號"},
+  bg:{
+    story:{  url:"https://images.unsplash.com/photo-1615716200048-1b1d0e012297?q=80&w=1600&auto=format&fit=crop", opacity:.15},
+    offerings:{url:"https://images.unsplash.com/photo-1523861751938-30554961e309?q=80&w=1600&auto=format&fit=crop", opacity:.12},
+    news:{   url:"https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=1600&auto=format&fit=crop", opacity:.12},
+    esg:{    url:"https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1600&auto=format&fit=crop", opacity:.12},
+    contact:{url:"https://images.unsplash.com/photo-1543339308-43f61b6d13a2?q=80&w=1600&auto=format&fit=crop", opacity:.25}
+  },
+  /* 消息中心預設資料 */
+  news:[
+    {title:"與在地農會簽署合作備忘錄", date:"2025-09-01", link:"#"},
+    {title:"碳穩穩產品通過第三方檢驗", date:"2025-08-15", link:"#"},
+    {title:"社區資源回收據點再擴點", date:"2025-07-20", link:"#"},
+    {title:"參與永續展：攤位活動花絮", date:"2025-06-05", link:"#"}
+  ]
+};
+applyBG('esg','esg');
+
+function load(key,fallback){try{
+  const raw=localStorage.getItem(key); return raw?JSON.parse(raw):structuredClone(fallback);
+}catch{return structuredClone(fallback)}}
+
+/* 背景工具 */
+function getBG(section){
+  const def = (defaults.bg && defaults.bg[section]) || {};
+  const url = localStorage.getItem(`bg.${section}.url`) || def.url || "";
+  const op  = parseFloat(localStorage.getItem(`bg.${section}.opacity`));
+  const opacity = isNaN(op) ? (def.opacity ?? 0.15) : op;
+  const mono = localStorage.getItem(`bg.${section}.mono`);
+  const isMono = mono === '1';
+  return {url, opacity, isMono};
+}
+function applyBG(sectionId, sectionKey){
+  const sec = document.getElementById(sectionId);
+  if(!sec) return;
+  const bg = getBG(sectionKey);
+  sec.classList.add('bg-photo');
+  sec.style.setProperty('--bg-url', bg.url ? `url('${bg.url}')` : 'none');
+  sec.style.setProperty('--bg-opacity', bg.opacity);
+  const filterValue = bg.isMono
+    ? 'grayscale(1) contrast(.95) brightness(1.3)'
+    : 'contrast(.95) brightness(1.15)';
+  sec.style.setProperty('--bg-filter', filterValue);
+}
+
+(function render(){
+  // logo
+  document.getElementById('logo').src = localStorage.getItem('site.logo') || defaults.logo;
+
+  // 產品卡 ICON 自動判斷
+  function pickIcon(text=''){
+    const t = String(text).trim();
+    if(t.includes('核心') || t.includes('碳穩穩')){
+      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 12c0 4.418 3.582 8 8 8 4.07 0 7.46-3.05 7.95-7.01C15 13 11 9 11 3 7.134 3 5 6.686 5 12z"/></svg>`;
+    }
+    if(t.includes('專業') || t.includes('服務')){
+      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 7l-3-3-4 4 3 3 4-4zM3 17l6 4 9-9-3-3-9 9v3z"/></svg>`;
+    }
+    if(t.includes('亮點') || t.includes('案例')){
+      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+    }
+    return '';
+  }
+
+  /* HERO */
+  const hero = load('site.hero', defaults.hero);
+  document.getElementById('heroTitle').textContent = hero.title;
+  document.getElementById('heroSub').textContent = hero.sub;
+  const c1 = document.getElementById('cta1'), c2 = document.getElementById('cta2');
+  if(c1){ c1.textContent = hero.cta1?.text || '了解我們的故事'; c1.href = hero.cta1?.href || '#story'; }
+  if(c2){ c2.textContent = hero.cta2?.text || '探索產品服務'; c2.href = hero.cta2?.href || '#offerings'; }
+  const slides = document.getElementById('slides'); slides.innerHTML='';
+  (hero.slides?.length ? hero.slides : defaults.hero.slides).forEach(src=>{
+    const d=document.createElement('div'); d.className='slide'; d.style.backgroundImage=`url('${src}')`; slides.appendChild(d);
+  });
+  if(slides.children.length){
+    let idx=0; setInterval(()=>{ idx=(idx+1)%slides.children.length; slides.style.transform=`translateX(-${idx*100}%)`; },5000);
+  }
+
+  /* STORY */
+  const story = load('site.story', defaults.story);
+  document.getElementById('storyStrap').textContent = story.strap;
+  document.getElementById('storyP1').textContent = story.p1;
+  document.getElementById('storyP2').textContent = story.p2;
+  ['v1','v2','v3'].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=story.values[i]||''; });
+  ['c1','c2','c3'].forEach((id,i)=>{ document.getElementById(id).textContent = story.core[i]||''; });
+  document.getElementById('storyImg').src = localStorage.getItem('site.storyImg') || defaults.storyImg;
+
+  /* PRODUCTS（只顯示兩張） */
+  const offers = load('site.offerings', defaults.offerings);
+  const wrap = document.getElementById('cards'); wrap.innerHTML='';
+  (offers.cards || []).slice(0,2).forEach(card=>{
+    const el = document.createElement('article'); el.className='card';
+    const iconSVG = pickIcon(card.badge || card.title);
+    el.innerHTML = `
+      ${card.badge?`<span class="badge">${card.badge}</span>`:''}
+      <div class="title-row">
+        ${iconSVG ? `<span class="icon-circle">${iconSVG}</span>` : ``}
+        <h3>${card.title||''}</h3>
+      </div>
+      <div style="color:#6c7b6c">${card.sub||''}</div>
+      ${card.img?`<img class="thumb" src="${card.img}">`:''}
+      ${(card.desc?`<p>${card.desc}</p>`:'')}
+      ${(card.bullets&&card.bullets.length)?`<ul class="bullets">${card.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}
+    `;
+    wrap.appendChild(el);
+  });
+
+  /* NEWS */
+  function formatDate(iso){
+    try{ const d = new Date(iso); if(isNaN(d)) return iso||''; return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`; }
+    catch{ return iso||''; }
+  }
+  const newsData = load('site.news', defaults.news);
+  const nw = document.getElementById('newsWrap');
+  if(nw){
+    nw.innerHTML = '';
+    (newsData || []).slice(0,3).forEach(n=>{
+      const a = document.createElement('a');
+      a.href = n.link || '#';
+      a.className = 'news-card';
+      const tag = (n.badge || n.tag || '公告更新').trim();
+      const excerpt = n.excerpt || '';
+      a.innerHTML = `
+        ${tag?`<span class="news-badge">${tag}</span>`:''}
+        <time>${formatDate(n.date||'')}</time>
+        <h4 class="news-title">${n.title||''}</h4>
+        ${excerpt ? `<p class="news-excerpt">${excerpt}</p>` : ``}
+        <span class="news-more">閱讀更多 →</span>
+      `;
+      nw.appendChild(a);
+    });
+  }
+
+  /* ESG 圖片與文字 */
+  document.getElementById('esgImg').src = localStorage.getItem('site.esgImg') || defaults.esgImg;
+  const et = load('site.esgText', defaults.esgText);
+  ['e1','e2','e3'].forEach((id,i)=>{ const el=document.getElementById(id); if(el&&et[i]) el.textContent=et[i]; });
+
+  /* CONTACT */
+  const c = load('site.contact', defaults.contact);
+  document.getElementById('tel').textContent = c.phone;
+  document.getElementById('mail').textContent = c.mail;
+  document.getElementById('addr').textContent = c.addr;
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* 背景淡化 */
+  applyBG('story','story');
+  applyBG('offerings','offerings');
+  applyBG('news','news');
+  applyBG('esg','esg');
+  applyBG('contact','contact');
+})();
+</script>
+</body>
+</html>
