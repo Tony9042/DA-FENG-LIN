@@ -6,8 +6,10 @@
 <title>後台管理｜大豐臨</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--brand:#2b7a4b;--line:#e6efe8;--paper:#fff;--soft:#f3f7f4;--shadow:0 10px 24px #00000012}
+:root{--brand:#18a74f;--line:#e6efe8;--paper:#fff;--soft:#f3f7f4;--shadow:0 10px 24px #00000012}
 *{box-sizing:border-box}
+
+
 html,body{margin:0}
 body{font-family:'Noto Sans TC',sans-serif;background:#eef4ef;color:#20342e}
 header{background:var(--brand);color:#fff;padding:16px 20px;position:sticky;top:0;z-index:10}
@@ -18,8 +20,9 @@ main{max-width:1140px;margin:22px auto;padding:0 16px 60px}
 .row{display:grid;gap:16px;grid-template-columns:1fr 1fr}
 .row-2{display:grid;gap:16px;grid-template-columns:1fr 1fr}
 .row-3{display:grid;gap:16px;grid-template-columns:1fr 1fr 1fr}
+.row-4{display:grid;gap:16px;grid-template-columns:1fr 1fr 1fr 1fr}
 .row-1{display:grid;gap:12px;grid-template-columns:1fr}
-@media(max-width:980px){.row,.row-2,.row-3{grid-template-columns:1fr}}
+@media(max-width:980px){.row,.row-2,.row-3,.row-4{grid-template-columns:1fr}}
 label{font-weight:800}
 input[type="text"],input[type="url"],textarea{width:100%;padding:10px;border:2px solid #cfe7d6;border-radius:8px;font:inherit}
 textarea{min-height:88px}
@@ -30,6 +33,11 @@ input[type="file"]{display:block;margin-top:6px}
 .btn.ghost{background:#fff;color:var(--brand);border:2px solid var(--brand)}
 .btn.danger{background:#c14646}
 .hint{font-size:12px;color:#6b7b6b;margin-top:6px}
+
+/* Slides 行樣式（含預覽） */
+.slide-row{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center}
+.slide-row .thumb{width:140px;height:90px}
+.slide-row .line{display:grid;grid-template-columns:1fr 200px;gap:8px}
 </style>
 </head>
 <body>
@@ -171,13 +179,17 @@ input[type="file"]{display:block;margin-top:6px}
   </div>
 </section>
 
-<!-- 聯絡資訊 -->
+<!-- 聯絡資訊（★ 加入 LINE） -->
 <section class="panel">
   <h2>聯絡資訊</h2>
-  <div class="body row-3">
+  <div class="body row-4">
     <div><label>電話</label><input id="phone" type="text" placeholder="+886-7-657-7151"></div>
     <div><label>Email</label><input id="mail" type="text" placeholder="info@dafengling.com"></div>
     <div><label>地址</label><input id="addr" type="text" placeholder="台灣台北市…"></div>
+    <div>
+      <label>LINE 顯示文字</label><input id="lineText" type="text" placeholder="@dafengling">
+      <label style="margin-top:8px">LINE 連結（可選）</label><input id="lineLink" type="url" placeholder="https://line.me/ti/p/....">
+    </div>
   </div>
 </section>
 
@@ -256,7 +268,7 @@ input[type="file"]{display:block;margin-top:6px}
 </main>
 
 <script>
-/* ===== 儲存健康檢查（建議保留） ===== */
+/* ===== 儲存健康檢查 ===== */
 (function storageHealthCheck(){
   function lsOK(){ try{ const k='__ls_test__'+Date.now(); localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; } }
   function usedMB(){ try{ const bytes = Object.values(localStorage).reduce((n,s)=> n + (s ? s.length : 0), 0); return (bytes/1024/1024).toFixed(2);}catch{ return 'N/A'; } }
@@ -309,7 +321,14 @@ const defaults = {
     "透明治理、誠信經營，建立長期信任。"
   ],
 
-  contact:{phone:"+886-7-657-7151",mail:"info@dafengling.com",addr:"台灣台北市信義區永續大道123號"},
+  /* ★ contact 增加 lineText / lineLink 預設 */
+  contact:{
+    phone:"+886-7-657-7151",
+    mail:"info@dafengling.com",
+    addr:"台灣台北市信義區永續大道123號",
+    lineText:"@dafengling",
+    lineLink:""
+  },
 
   bg:{
     story:{url:"https://images.unsplash.com/photo-1615716200048-1b1d0e012297?q=80&w=1600&auto=format&fit=crop", opacity:.15},
@@ -332,15 +351,15 @@ const read64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>re
 function load(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):structuredClone(fallback);}catch{return structuredClone(fallback)}}
 function safeSetItem(k, v) { try { localStorage.setItem(k, v); return true; } catch(e){ console.error('localStorage error on', k, e); return false; } }
 
-/* Slides 行項目 */
+/* Slides 行項目（網址 + 上傳 + 預覽） */
 function createSlideRow(data={}){ 
   const wrap=document.createElement('div'); 
-  wrap.className='card';
-  wrap.style.display='grid'; wrap.style.gridTemplateColumns='140px 1fr'; wrap.style.gap='12px'; wrap.style.alignItems='center';
+  wrap.className='card slide-row';
   wrap.innerHTML=`
+    <img class="thumb" alt="">
     <div>
-      <div class="row" style="grid-template-columns:1fr 200px;gap:8px">
-        <input type="url" class="slide-url" placeholder="圖片網址（若留空就用下方上傳檔）">
+      <div class="line">
+        <input type="url" class="slide-url" placeholder="圖片網址（建議使用 repo 的 /assets 或雲端連結）">
         <input type="file" class="slide-file" accept="image/*">
       </div>
       <div style="display:flex;gap:8px;margin-top:8px">
@@ -349,8 +368,22 @@ function createSlideRow(data={}){
         <button type="button" class="btn danger btn-del">刪除</button>
       </div>
     </div>`;
-  const urlInput=wrap.querySelector('.slide-url'); const fileInput=wrap.querySelector('.slide-file');
-  if(data && data.src){ urlInput.value=data.src; }
+  const img=wrap.querySelector('img.thumb');
+  const urlInput=wrap.querySelector('.slide-url');
+  const fileInput=wrap.querySelector('.slide-file');
+
+  if(data && data.src){ urlInput.value=data.src; img.src=data.src; }
+
+  urlInput.addEventListener('input',()=>{
+    if(urlInput.value.trim() && !fileInput.files[0]) img.src = urlInput.value.trim();
+    if(!urlInput.value.trim() && !fileInput.files[0]) img.src = '';
+  });
+  fileInput.addEventListener('change', async e=>{
+    if(e.target.files[0]) img.src = await read64(e.target.files[0]);
+    else if(urlInput.value.trim()) img.src = urlInput.value.trim();
+    else img.src = '';
+  });
+
   wrap.querySelector('.btn-up').onclick = ()=>{ const p=$('#slidesWrap'); if(wrap.previousElementSibling) p.insertBefore(wrap, wrap.previousElementSibling); };
   wrap.querySelector('.btn-down').onclick = ()=>{ const p=$('#slidesWrap'); if(wrap.nextElementSibling) p.insertBefore(wrap.nextElementSibling, wrap); };
   wrap.querySelector('.btn-del').onclick = ()=> wrap.remove();
@@ -459,6 +492,14 @@ function fill(){
   const newsData = load('site.news', defaults.news);
   (newsData || []).forEach(n => newsList.appendChild(createNewsRow(n)));
   $('#addNews').onclick = ()=> newsList.appendChild(createNewsRow({}));
+
+  // 聯絡資訊（★含 LINE）
+  const ct = load('site.contact', defaults.contact);
+  $('#phone').value = ct.phone || '';
+  $('#mail').value  = ct.mail || '';
+  $('#addr').value  = ct.addr || '';
+  $('#lineText').value = ct.lineText || '';
+  $('#lineLink').value = ct.lineLink || '';
 }
 
 /* 儲存 */
@@ -498,9 +539,13 @@ async function save(){
   const et = [$('#e1').value.trim(),$('#e2').value.trim(),$('#e3').value.trim()];
   localStorage.setItem('site.esgText', JSON.stringify(et));
 
-  // 聯絡
+  // 聯絡（★含 LINE）
   localStorage.setItem('site.contact', JSON.stringify({
-    phone:$('#phone').value.trim(), mail:$('#mail').value.trim(), addr:$('#addr').value.trim()
+    phone:$('#phone').value.trim(),
+    mail:$('#mail').value.trim(),
+    addr:$('#addr').value.trim(),
+    lineText:$('#lineText').value.trim(),
+    lineLink:$('#lineLink').value.trim()
   }));
 
   // 背景
@@ -545,13 +590,13 @@ async function save(){
   hero.cta2  = { text: $('#cta2Text').value.trim(), href: $('#cta2Href').value.trim() };
 
   async function collectSlides(){
-    const rows = Array.from(document.querySelectorAll('#slidesWrap .card'));
+    const rows = Array.from(document.querySelectorAll('#slidesWrap .slide-row'));
     const out = [];
     for (const row of rows){
       const url = row.querySelector('.slide-url').value.trim();
       const f = row.querySelector('.slide-file').files[0];
-      if (f) out.push(await read64(f));
-      else if (url) out.push(url);
+      if (url) out.push(url);
+      else if (f) out.push(await read64(f));
     }
     return out;
   }
@@ -592,7 +637,7 @@ function exportAll(){
     'bg.esg.url': localStorage.getItem('bg.esg.url') || (defaults.bg.esg.url || ''),
     'bg.esg.opacity': localStorage.getItem('bg.esg.opacity') || String(defaults.bg.esg.opacity ?? ''),
     'bg.contact.url': localStorage.getItem('bg.contact.url') || (defaults.bg.contact.url || ''),
-    'bg.contact.opacity': localStorage.getItem('bg.contact.opacity') || String(defaults.bg.contact.opacity ?? ''),
+    'bg.contact.opacity': localStorage.getItem('bg.contact.opacity') || String(defaults.bg.contact.opacity ?? '')
   };
   const blob = new Blob([JSON.stringify(dump,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='dafengling-site-data.json'; a.click();
