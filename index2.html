@@ -24,7 +24,9 @@ a{color:var(--brand);text-decoration:none}
   background:#eaf4ec;border:1px solid #d7eadc;color:#2b7a4b;flex:0 0 28px
 }
 .icon-circle svg{width:16px;height:16px;display:block}
-
+:root{ --contact-link-color:#d7f1dc; --contact-link-hover:#fff; }
+#contact .veil #lineCell a{ color:var(--contact-link-color); }
+#contact .veil #lineCell a:hover{ color:var(--contact-link-hover); }
 /* ===== NEWS（新版三欄卡片，無圖片） ===== */
 #news{
   background: linear-gradient(180deg,#f3fbf5 0%, #eef7f0 100%);
@@ -48,15 +50,43 @@ a{color:var(--brand);text-decoration:none}
   transition:transform .15s ease, box-shadow .15s ease;
   color:inherit;
 }
-.news-card:hover{ transform:translateY(-2px); box-shadow:0 14px 30px #00000014; }
-.news-badge{
-  display:inline-block; font-size:12px; padding:4px 8px; border-radius:999px;
-  background:#eaf7ee; color:#2b7a4b; border:1px solid #d6eadc; margin-bottom:8px;
+.news-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 30px #00000014;
 }
-#news time{ display:block; font-size:12px; color:#6b7b6d; margin-bottom:6px; }
-.news-title{ margin:0 0 8px; font-size:16px; font-weight:800; color:#1e2f29; }
-.news-excerpt{ margin:0 0 10px; color:#47564f; line-height:1.7; font-size:14px; }
-.news-more{ color:#2b7a4b; font-weight:700; font-size:14px; }
+.news-badge{
+  display:inline-block;
+  font-size:12px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#eaf7ee;
+  color:#2b7a4b;
+  border:1px solid #d6eadc;
+  margin-bottom:8px;
+}
+#news time{
+  display:block;
+  font-size:12px;
+  color:#6b7b6d;
+  margin-bottom:6px;
+}
+.news-title{
+  margin:0 0 8px;
+  font-size:16px;
+  font-weight:800;
+  color:#1e2f29;
+}
+.news-excerpt{
+  margin:0 0 10px;
+  color:#47564f;
+  line-height:1.7;
+  font-size:14px;
+}
+.news-more{
+  color:#2b7a4b;
+  font-weight:700;
+  font-size:14px;
+}
 
 /* header */
 header{position:sticky;top:0;z-index:20;background:#ffffffdd;backdrop-filter:saturate(120%) blur(8px);
@@ -136,20 +166,14 @@ display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-s
 .esg-pic{border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
 .esg-pic img{width:100%;display:block}
 
-/* ➕ ESG 標題 ICON（新加） */
-.esg-title{display:flex;align-items:center;gap:10px}
-.esg-ico{
-  width:28px;height:28px;border-radius:999px;
-  display:flex;align-items:center;justify-content:center;
-  background:#eaf7ee;border:1px solid #d6eadc;color:#2b7a4b;font-size:16px;flex:0 0 28px
-}
-
 /* contact */
 #contact{background:transparent}
 #contact .veil{background:#1d3f2eeb;border-radius:18px;color:#e9fff3;box-shadow:var(--shadow);padding:26px}
 #contact .title{color:#24413a}
 #contact .strap{color:#8b6f56}
-.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:10px}
+
+/* ★ 改成 4 欄（手機 1 欄） */
+.contact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:10px}
 @media(max-width:900px){.contact-grid{grid-template-columns:1fr}}
 .icon{font-size:30px}
 .center{text-align:center}
@@ -162,7 +186,7 @@ footer{background:#113b28;color:#bde7d1;text-align:center;padding:18px}
 #story.story-hero .title{ font-size:clamp(32px,5vw,52px); letter-spacing:.08em; color:#24413a; text-align:center; margin-bottom:6px; font-weight:900; }
 #story.story-hero .strap{ text-align:center; color:#5d6c63; margin-bottom:28px; }
 
-/* values（2×2 手機1欄） */
+/* values */
 .values{ display:grid; gap:18px; grid-template-columns:1fr; margin-top:22px; }
 @media(min-width:680px){ .values{ grid-template-columns:repeat(2,1fr);} }
 .val{ background:transparent; border:0; box-shadow:none; padding:6px 6px 10px; text-align:center; }
@@ -275,17 +299,13 @@ footer{background:#113b28;color:#bde7d1;text-align:center;padding:18px}
 
     <div class="esg-in">
       <div>
-        <h4 class="esg-title"><span class="esg-ico">🌿</span>環境（Environment）</h4>
+        <h4>環境（Environment）</h4>
         <p id="e1">我們致力於將有機廢棄物轉化為有價值的資源，減少掩埋與焚燒，透過「碳穩穩」肥料將碳封存在土壤中。</p>
-
-        <h4 class="esg-title"><span class="esg-ico">🤝</span>社會（Social）</h4>
+        <h4>社會（Social）</h4>
         <p id="e2">與在地社區、農場合作，建立回收網絡，推廣環境教育，提升大眾對資源意識。</p>
-
-        <h4 class="esg-title"><span class="esg-ico">⚖️</span>治理（Governance）</h4>
+        <h4>治理（Governance）</h4>
         <p id="e3">以透明負責的營運模式，落實誠信與永續決策，建立長期信任。</p>
       </div>
-
-      <!-- 右側圖片：可在後台「ESG 圖片」上傳或貼網址 -->
       <div class="esg-pic"><img id="esgImg" alt=""></div>
     </div>
   </div>
@@ -313,6 +333,12 @@ footer{background:#113b28;color:#bde7d1;text-align:center;padding:18px}
           <div class="icon">📍</div>
           <h3>地址</h3>
           <div id="addr">台灣台北市信義區永續大道123號</div>
+        </div>
+        <!-- ★ 新增：LINE -->
+        <div class="center">
+          <div class="icon">💬</div>
+          <h3>LINE</h3>
+          <div id="lineCell"></div>
         </div>
       </div>
     </div>
@@ -359,7 +385,14 @@ const defaults = {
     ]
   },
   esgText:["…","…","…"],
-  contact:{phone:"+886-7-657-7151",mail:"info@dafengling.com",addr:"台灣台北市信義區永續大道123號"},
+  /* ★ contact 新增 lineText / lineLink */
+  contact:{
+    phone:"+886-7-657-7151",
+    mail:"info@dafengling.com",
+    addr:"台灣台北市信義區永續大道123號",
+    lineText:"@dafengling",
+    lineLink:"" /* 例： https://line.me/ti/p/xxxxxxxx */
+  },
   bg:{
     story:{  url:"https://images.unsplash.com/photo-1615716200048-1b1d0e012297?q=80&w=1600&auto=format&fit=crop", opacity:.15},
     offerings:{url:"https://images.unsplash.com/photo-1523861751938-30554961e309?q=80&w=1600&auto=format&fit=crop", opacity:.12},
@@ -367,21 +400,22 @@ const defaults = {
     esg:{    url:"https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1600&auto=format&fit=crop", opacity:.12},
     contact:{url:"https://images.unsplash.com/photo-1543339308-43f61b6d13a2?q=80&w=1600&auto=format&fit=crop", opacity:.25}
   },
-  /* 消息中心預設資料 */
+  /* 消息中心預設資料（無圖片） */
   news:[
-    {title:"與在地農會簽署合作備忘錄", date:"2025-09-01", link:"#"},
-    {title:"碳穩穩產品通過第三方檢驗", date:"2025-08-15", link:"#"},
-    {title:"社區資源回收據點再擴點", date:"2025-07-20", link:"#"},
-    {title:"參與永續展：攤位活動花絮", date:"2025-06-05", link:"#"}
+    {badge:"公司新聞", date:"2024年3月15日", title:"大豐臨與在地農場簽署合作備忘錄", excerpt:"攜手推動有機農業發展，建立友善循環生態系統。", link:"#"},
+    {badge:"成果分享", date:"2024年3月10日", title:"碳穩穩肥料助力農友增產30%", excerpt:"經過一季的使用，合作農友反映作物品質穩定提升。", link:"#"},
+    {badge:"活動資訊", date:"2024年3月20日", title:"永續農業實訪節目將播出", excerpt:"邀請產學界專家共同探討資源循環的未來發展。", link:"#"}
   ]
 };
+
+/* 先把 ESG 也套上背景（可留著） */
 applyBG('esg','esg');
 
 function load(key,fallback){try{
   const raw=localStorage.getItem(key); return raw?JSON.parse(raw):structuredClone(fallback);
 }catch{return structuredClone(fallback)}}
 
-/* 背景工具 */
+/* ---- 背景套用工具 ---- */
 function getBG(section){
   const def = (defaults.bg && defaults.bg[section]) || {};
   const url = localStorage.getItem(`bg.${section}.url`) || def.url || "";
@@ -408,22 +442,28 @@ function applyBG(sectionId, sectionKey){
   // logo
   document.getElementById('logo').src = localStorage.getItem('site.logo') || defaults.logo;
 
-  // 產品卡 ICON 自動判斷
+  // 選 ICON（依 badge 或 title）
   function pickIcon(text=''){
     const t = String(text).trim();
     if(t.includes('核心') || t.includes('碳穩穩')){
-      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 12c0 4.418 3.582 8 8 8 4.07 0 7.46-3.05 7.95-7.01C15 13 11 9 11 3 7.134 3 5 6.686 5 12z"/></svg>`;
+      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M5 12c0 4.418 3.582 8 8 8 4.07 0 7.46-3.05 7.95-7.01C15 13 11 9 11 3 7.134 3 5 6.686 5 12z"/>
+      </svg>`;
     }
     if(t.includes('專業') || t.includes('服務')){
-      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 7l-3-3-4 4 3 3 4-4zM3 17l6 4 9-9-3-3-9 9v3z"/></svg>`;
+      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M21 7l-3-3-4 4 3 3 4-4zM3 17l6 4 9-9-3-3-9 9v3z"/>
+      </svg>`;
     }
     if(t.includes('亮點') || t.includes('案例')){
-      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+      return `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      </svg>`;
     }
     return '';
   }
 
-  /* HERO */
+  // HERO
   const hero = load('site.hero', defaults.hero);
   document.getElementById('heroTitle').textContent = hero.title;
   document.getElementById('heroSub').textContent = hero.sub;
@@ -432,13 +472,16 @@ function applyBG(sectionId, sectionKey){
   if(c2){ c2.textContent = hero.cta2?.text || '探索產品服務'; c2.href = hero.cta2?.href || '#offerings'; }
   const slides = document.getElementById('slides'); slides.innerHTML='';
   (hero.slides?.length ? hero.slides : defaults.hero.slides).forEach(src=>{
-    const d=document.createElement('div'); d.className='slide'; d.style.backgroundImage=`url('${src}')`; slides.appendChild(d);
+    const d=document.createElement('div');
+    d.className='slide';
+    d.style.backgroundImage=`url('${src}')`;
+    slides.appendChild(d);
   });
   if(slides.children.length){
     let idx=0; setInterval(()=>{ idx=(idx+1)%slides.children.length; slides.style.transform=`translateX(-${idx*100}%)`; },5000);
   }
 
-  /* STORY */
+  // story
   const story = load('site.story', defaults.story);
   document.getElementById('storyStrap').textContent = story.strap;
   document.getElementById('storyP1').textContent = story.p1;
@@ -447,7 +490,7 @@ function applyBG(sectionId, sectionKey){
   ['c1','c2','c3'].forEach((id,i)=>{ document.getElementById(id).textContent = story.core[i]||''; });
   document.getElementById('storyImg').src = localStorage.getItem('site.storyImg') || defaults.storyImg;
 
-  /* PRODUCTS（只顯示兩張） */
+  // products（只顯示兩張）
   const offers = load('site.offerings', defaults.offerings);
   const wrap = document.getElementById('cards'); wrap.innerHTML='';
   (offers.cards || []).slice(0,2).forEach(card=>{
@@ -456,7 +499,7 @@ function applyBG(sectionId, sectionKey){
     el.innerHTML = `
       ${card.badge?`<span class="badge">${card.badge}</span>`:''}
       <div class="title-row">
-        ${iconSVG ? `<span class="icon-circle">${iconSVG}</span>` : ``}
+        ${iconSVG ? `<span class="icon-circle">${iconSVG}</span>` : ''}
         <h3>${card.title||''}</h3>
       </div>
       <div style="color:#6c7b6c">${card.sub||''}</div>
@@ -467,10 +510,13 @@ function applyBG(sectionId, sectionKey){
     wrap.appendChild(el);
   });
 
-  /* NEWS */
+  // ===== NEWS（無圖，三欄一列） =====
   function formatDate(iso){
-    try{ const d = new Date(iso); if(isNaN(d)) return iso||''; return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`; }
-    catch{ return iso||''; }
+    try{
+      const d = new Date(iso);
+      if(isNaN(d)) return iso || '';
+      return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+    }catch{ return iso || ''; }
   }
   const newsData = load('site.news', defaults.news);
   const nw = document.getElementById('newsWrap');
@@ -480,10 +526,10 @@ function applyBG(sectionId, sectionKey){
       const a = document.createElement('a');
       a.href = n.link || '#';
       a.className = 'news-card';
-      const tag = (n.badge || n.tag || '公告更新').trim();
+      const tag = n.badge || n.tag || '公告更新';
       const excerpt = n.excerpt || '';
       a.innerHTML = `
-        ${tag?`<span class="news-badge">${tag}</span>`:''}
+        <span class="news-badge">${tag}</span>
         <time>${formatDate(n.date||'')}</time>
         <h4 class="news-title">${n.title||''}</h4>
         ${excerpt ? `<p class="news-excerpt">${excerpt}</p>` : ``}
@@ -493,20 +539,26 @@ function applyBG(sectionId, sectionKey){
     });
   }
 
-  /* ESG 圖片與文字 */
+  // ESG
   document.getElementById('esgImg').src = localStorage.getItem('site.esgImg') || defaults.esgImg;
   const et = load('site.esgText', defaults.esgText);
   ['e1','e2','e3'].forEach((id,i)=>{ const el=document.getElementById(id); if(el&&et[i]) el.textContent=et[i]; });
 
-  /* CONTACT */
+  // contact（★含 LINE）
   const c = load('site.contact', defaults.contact);
-  document.getElementById('tel').textContent = c.phone;
-  document.getElementById('mail').textContent = c.mail;
-  document.getElementById('addr').textContent = c.addr;
+  document.getElementById('tel').textContent = c.phone || '';
+  document.getElementById('mail').textContent = c.mail || '';
+  document.getElementById('addr').textContent = c.addr || '';
+  const lineCell = document.getElementById('lineCell');
+  if (c.lineLink && (c.lineText || c.lineLink)){
+    lineCell.innerHTML = `<a href="${c.lineLink}" target="_blank" rel="noopener">${c.lineText || c.lineLink}</a>`;
+  }else{
+    lineCell.textContent = c.lineText || '';
+  }
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  /* 背景淡化 */
+  // 背景
   applyBG('story','story');
   applyBG('offerings','offerings');
   applyBG('news','news');
